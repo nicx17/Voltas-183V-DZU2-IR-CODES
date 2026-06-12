@@ -1,0 +1,151 @@
+# Voltas 183V DZU2 AC -- ESPHome Configuration
+# ESP32-S3 with IR LED on GPIO4
+#
+# Creates in Home Assistant:
+#   - Climate entity: temperature (17-30C), modes, fan speeds, swing
+#   - Buttons: Turbo toggle, Display toggle
+#   - Numbers: Timer OFF (0-24h), Timer ON (0-24h)
+#   - Switches: Sleep, Eco, Follow Me
+
+esphome:
+  name: voltas-ac         # change to your device name
+  friendly_name: Voltas AC
+  min_version: 2026.4.0
+  name_add_mac_suffix: false
+
+esp32:
+  variant: esp32s3
+  framework:
+    type: esp-idf
+
+logger:
+
+api:
+
+ota:
+  - platform: esphome
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+# --- Voltas AC component ---
+
+external_components:
+  - source:
+      type: local
+      path: components
+
+remote_transmitter:
+  id: ir_transmitter
+  pin: GPIO4
+  carrier_duty_percent: 50%
+  non_blocking: true
+
+# Climate entity (modes, temp, fan, swing)
+climate:
+  - platform: voltas_ac
+    name: "Voltas AC"
+    id: voltas_ac_climate
+    transmitter_id: ir_transmitter
+
+# Toggle buttons (turbo, display)
+button:
+  - platform: template
+    name: "Voltas Turbo"
+    id: voltas_turbo_btn
+    icon: "mdi:fan-chevron-up"
+    on_press:
+      then:
+        - lambda: |-
+            ((esphome::voltas_ac::VoltasAC*)id(voltas_ac_climate))->send_turbo_toggle();
+
+  - platform: template
+    name: "Voltas Display"
+    id: voltas_display_btn
+    icon: "mdi:monitor-eye"
+    on_press:
+      then:
+        - lambda: |-
+            ((esphome::voltas_ac::VoltasAC*)id(voltas_ac_climate))->send_display_toggle();
+
+# Timer controls (0 = cancel, 0.5-24 hours)
+number:
+  - platform: template
+    name: "Voltas Timer Off"
+    id: voltas_timer_off
+    icon: "mdi:timer-off-outline"
+    min_value: 0
+    max_value: 24
+    step: 0.5
+    unit_of_measurement: "h"
+    optimistic: true
+    restore_value: false
+    initial_value: 0
+    set_action:
+      then:
+        - lambda: |-
+            ((esphome::voltas_ac::VoltasAC*)id(voltas_ac_climate))->send_timer_off(x);
+
+  - platform: template
+    name: "Voltas Timer On"
+    id: voltas_timer_on
+    icon: "mdi:timer-outline"
+    min_value: 0
+    max_value: 24
+    step: 0.5
+    unit_of_measurement: "h"
+    optimistic: true
+    restore_value: false
+    initial_value: 0
+    set_action:
+      then:
+        - lambda: |-
+            ((esphome::voltas_ac::VoltasAC*)id(voltas_ac_climate))->send_timer_on(x);
+
+# Sleep, Eco, Follow Me switches
+switch:
+  - platform: template
+    name: "Voltas Sleep"
+    id: voltas_sleep
+    icon: "mdi:sleep"
+    optimistic: true
+    restore_mode: ALWAYS_OFF
+    turn_on_action:
+      then:
+        - lambda: |-
+            ((esphome::voltas_ac::VoltasAC*)id(voltas_ac_climate))->send_sleep_on();
+    turn_off_action:
+      then:
+        - lambda: |-
+            ((esphome::voltas_ac::VoltasAC*)id(voltas_ac_climate))->send_sleep_off();
+
+  - platform: template
+    name: "Voltas Eco"
+    id: voltas_eco
+    icon: "mdi:leaf"
+    optimistic: true
+    restore_mode: ALWAYS_OFF
+    turn_on_action:
+      then:
+        - lambda: |-
+            ((esphome::voltas_ac::VoltasAC*)id(voltas_ac_climate))->send_eco_on();
+    turn_off_action:
+      then:
+        - lambda: |-
+            ((esphome::voltas_ac::VoltasAC*)id(voltas_ac_climate))->send_eco_off();
+
+  - platform: template
+    name: "Voltas Follow Me"
+    id: voltas_follow_me
+    icon: "mdi:account-arrow-right"
+    optimistic: true
+    restore_mode: ALWAYS_OFF
+    turn_on_action:
+      then:
+        - lambda: |-
+            ((esphome::voltas_ac::VoltasAC*)id(voltas_ac_climate))->send_follow_me_on();
+    turn_off_action:
+      then:
+        - lambda: |-
+            ((esphome::voltas_ac::VoltasAC*)id(voltas_ac_climate))->send_follow_me_off();

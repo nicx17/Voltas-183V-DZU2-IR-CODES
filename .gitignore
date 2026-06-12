@@ -1,0 +1,7 @@
+.venv/
+temp.txt
+captured_ir_data.txt
+esphome/secrets.yaml
+esphome/voltas_ac.local.yaml
+__pycache__/
+*.pyc
