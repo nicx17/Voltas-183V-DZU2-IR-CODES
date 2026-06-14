@@ -12,8 +12,9 @@ voltas_ir_mapping/
   LICENSE                         -- MIT
 
   record_codes.py                 -- interactive Python recorder
-  captured_ir_data.txt            -- initial raw capture (power on/off)
+  json_to_flipper.py              -- convert JSON to Flipper Zero .ir format
   voltas_183v_dzu2_codes.json     -- all recorded codes database
+  Voltas_183V_DZU2.ir             -- Flipper Zero / IR remote file
 
   voltas_ir_capture/              -- Arduino sketch: IR receiver/decoder
     voltas_ir_capture.ino
@@ -81,6 +82,19 @@ The AC appears as a Climate entity in Home Assistant with:
 - **Buttons**: Turbo toggle, Display toggle
 - **Numbers**: Timer Off (0-24h), Timer On (0-24h)
 - **Switches**: Sleep, Eco, Follow Me
+
+### 3. Flipper Zero / IR Remote App
+
+The pre-built `Voltas_183V_DZU2.ir` file can be imported directly into:
+
+- **Flipper Zero**: Copy to `SD Card/infrared/` on the Flipper
+- **IR remote apps**: Any app that supports the Flipper `.ir` format
+
+To regenerate after recording new codes:
+
+```bash
+python3 json_to_flipper.py
+```
 
 ---
 
