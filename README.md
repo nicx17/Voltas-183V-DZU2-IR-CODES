@@ -1,7 +1,24 @@
-# Voltas 183V DZU2 IR Remote Mapping
+![License](https://img.shields.io/github/license/nicx17/Voltas-183V-DZU2-IR-CODES?style=for-the-badge)
+![ESPHome](https://img.shields.io/badge/ESPHome-Compatible-blue?style=for-the-badge&logo=esphome&logoColor=white)
+![Home Assistant](https://img.shields.io/badge/Home_Assistant-Integration-41BDF5?style=for-the-badge&logo=homeassistant&logoColor=white)
+![Flipper Zero](https://img.shields.io/badge/Flipper_Zero-.ir_File-FF6600?style=for-the-badge&logo=flipboard&logoColor=white)
+![ESP32](https://img.shields.io/badge/ESP32--S3-Tested-E7352C?style=for-the-badge&logo=espressif&logoColor=white)
+![IR Signals](https://img.shields.io/badge/IR_Signals-74-brightgreen?style=for-the-badge)
 
-IR code capture, analysis, and Home Assistant integration for the
-**Voltas 183V DZU2** split/inverter AC.
+# Voltas 183V DZU2 IR Remote -- Codes, Protocol & Home Assistant Integration
+
+Complete IR code database, fully decoded protocol documentation, and ready-to-use
+Home Assistant (ESPHome) climate integration for the **Voltas 183V DZU2** split AC.
+Also includes Flipper Zero `.ir` files for direct import.
+
+## Features
+
+- **74 captured IR signals** -- every temperature, fan speed, mode, and feature combination
+- **Full protocol decode** -- 48-bit NEC-extended, Gray-coded temperature, timer encoding
+- **ESPHome climate component** -- shows up as a native AC in Home Assistant
+- **Flipper Zero compatible** -- pre-built `.ir` files (full + compact remote)
+- **Timer support** -- 0.5h to 24h, auto-off and auto-on
+- **All features** -- Cool, Heat, Dry, Fan, Swing, Turbo, Sleep, Eco, Follow Me, Display toggle
 
 ## Project Structure
 
@@ -41,6 +58,12 @@ voltas_ir_mapping/
 | HW-477 (VS1838B)       | 38kHz IR receiver module    |
 | IR LED + 100 ohm       | IR transmitter (test)       |
 | ESP32-S3               | ESPHome deployment to HA    |
+
+Yes, the ESP32-S3 is overpowered for this project but that's what I had laying around.
+
+![ESP32-S3 board, top view](assets/IMG_20260614_204640.jpg)
+
+![ESP32-S3 with transistor-driven IR LED wiring](assets/IMG_20260614_204654.jpg)
 
 ## Protocol Summary
 
@@ -278,8 +301,15 @@ NPN transistor: 2N2222, BC547, or similar.
 Protocol discovery started from
 [IRremoteESP8266 PR #1243](https://github.com/crankyoldgit/IRremoteESP8266/pull/1243)
 which added support for the Voltas 122LZF Window AC. The 183V DZU2 split AC
-uses a different 48-bit protocol and was captured directly using the Xiaomi
-Mi Remote app as the signal source.
+uses a different 48-bit protocol and was reverse-engineered from the original
+remote.
+
+## Compatible Models
+
+Tested on the **Voltas 183V DZU2** split/inverter AC. May also work with
+other Voltas models using the same 48-bit NEC-extended protocol with
+device address `B2 4D`. If your Voltas remote produces similar byte
+patterns, this integration should work directly or with minor modifications.
 
 ## License
 
