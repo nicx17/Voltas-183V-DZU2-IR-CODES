@@ -14,7 +14,8 @@ voltas_ir_mapping/
   record_codes.py                 -- interactive Python recorder
   json_to_flipper.py              -- convert JSON to Flipper Zero .ir format
   voltas_183v_dzu2_codes.json     -- all recorded codes database
-  Voltas_183V_DZU2.ir             -- Flipper Zero / IR remote file
+  Voltas_183V_DZU2.ir             -- Flipper Zero / IR remote (full database)
+  Voltas_183V_DZU2_Remote.ir      -- Flipper Zero / IR remote (compact)
 
   voltas_ir_capture/              -- Arduino sketch: IR receiver/decoder
     voltas_ir_capture.ino
